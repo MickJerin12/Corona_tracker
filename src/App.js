@@ -6,6 +6,7 @@ import { Cards, Chart, CountryPicker } from "./components";
 export default class App extends Component {
   state = {
     data: {},
+    country: "",
   };
   async componentDidMount() {
     const data = await fetchData();
@@ -13,13 +14,21 @@ export default class App extends Component {
       data,
     });
   }
+  handleCountryChange = async (country) => {
+    const fetchedData = await fetchData(country);
+    this.setState({ data: fetchedData, country });
+    console.log(fetchedData);
+  };
   render() {
-    const { data } = this.state;
+    const { data, country } = this.state;
     return (
       <div className={styles.container}>
         <Cards data={data} lastUpdate={data.lastUpdate} />
-        <CountryPicker data={data} />
-        <Chart data={data} />
+        <CountryPicker
+          data={data}
+          handleCountryChange={this.handleCountryChange}
+        />
+        <Chart data={data} country={country} />
       </div>
     );
   }
